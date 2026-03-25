@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 치트시트 (한국어)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { mono: ['SF Mono', 'Fira Code', 'Consolas', 'monospace'] },
+      fontSize: { '2xs': '0.65rem' }
+    }
+  }
+}
+</script>
+<style>
+  @media print {
+    @page { size: A4 landscape; margin: 6mm; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: white !important; font-size: 9px !important; line-height: 1.3 !important; }
+    header { position: static !important; padding: 8px 12px !important; }
+    .print\:hidden { display: none !important; }
+    /* 4-column grid for print */
+    .grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; padding: 6px !important; }
+    /* Prevent section breaks */
+    .grid > div { break-inside: avoid !important; page-break-inside: avoid !important; box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+    /* Compact spacing */
+    .p-2\.5 { padding: 4px 6px !important; }
+    .space-y-2 > * + * { margin-top: 4px !important; }
+    .py-0\.5 { padding-top: 1px !important; padding-bottom: 1px !important; }
+    /* Ensure colored headers print */
+    [class*="bg-indigo-"], [class*="bg-cyan-"], [class*="bg-emerald-"],
+    [class*="bg-amber-"], [class*="bg-violet-"], [class*="bg-red-"],
+    [class*="bg-blue-"], [class*="bg-pink-"] { -webkit-print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800 text-xs leading-relaxed font-sans">
+
+<!-- Header -->
+<header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
+  <h1 class="text-xl font-bold tracking-tight">
+    Claude Code 치트시트
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.81 &middot; 한국어</span>
+  </h1>
+  <div class="flex items-center gap-3">
+    <div class="flex bg-white/15 rounded-lg overflow-hidden">
+      <button id="btn-mac" onclick="setOS('mac')" class="px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10 transition-all cursor-pointer">Mac</button>
+      <button id="btn-win" onclick="setOS('win')" class="px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10 transition-all cursor-pointer">Windows</button>
+    </div>
+    <button onclick="window.print()" class="print:hidden flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white/90 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.4 42.4 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18.25 7.034V3.375"/></svg>
+      인쇄
+    </button>
+  </div>
+</header>
+
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 p-3 max-w-[1600px] mx-auto print:grid-cols-cheat print:gap-2 print:p-2">
+
+<!-- ===== 1. 키보드 단축키 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-indigo-500 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">⌨️ 키보드 단축키</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-indigo-500 pb-0.5 border-b border-gray-200 mb-1">일반 조작</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+C</kbd></div><div class="text-gray-500">입력/생성 취소</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+D</kbd></div><div class="text-gray-500">세션 종료</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+L</kbd></div><div class="text-gray-500">화면 지우기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+O</kbd></div><div class="text-gray-500">상세 출력 토글</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+R</kbd></div><div class="text-gray-500">히스토리 역방향 검색</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+G</kbd></div><div class="text-gray-500">에디터에서 프롬프트 열기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+B</kbd></div><div class="text-gray-500">작업 백그라운드 전환</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+T</kbd></div><div class="text-gray-500">작업 목록 토글</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+V</kbd></div><div class="text-gray-500">이미지 붙여넣기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+F</kbd> <span class="text-gray-400">×2</span></div><div class="text-gray-500">백그라운드 에이전트 종료</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Esc</kbd>+<kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Esc</kbd></div><div class="text-gray-500">되돌리기(Undo)</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-indigo-500 pb-0.5 border-b border-gray-200 mb-1">모드 전환</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Shift+Tab</kbd></div><div class="text-gray-500">권한 모드 순환</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k-alt inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Alt+P</kbd></div><div class="text-gray-500">모델 전환</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k-alt inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Alt+T</kbd></div><div class="text-gray-500">사고(Thinking) 토글</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-indigo-500 pb-0.5 border-b border-gray-200 mb-1">입력</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">\</kbd>+<kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Enter</kbd></div><div class="text-gray-500">줄바꿈 (빠른 방법)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+J</kbd></div><div class="text-gray-500">줄바꿈 (제어 시퀀스)</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-indigo-500 pb-0.5 border-b border-gray-200 mb-1">접두사</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">/</kbd></div><div class="text-gray-500">슬래시 명령어</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">!</kbd></div><div class="text-gray-500">직접 Bash 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">@</kbd></div><div class="text-gray-500">파일 멘션 + 자동완성</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-indigo-500 pb-0.5 border-b border-gray-200 mb-1">세션 선택기</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">↑</kbd><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">↓</kbd></div><div class="text-gray-500">탐색</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">←</kbd><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">→</kbd></div><div class="text-gray-500">펼치기/접기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">P</kbd></div><div class="text-gray-500">미리보기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">R</kbd></div><div class="text-gray-500">이름 변경</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">/</kbd></div><div class="text-gray-500">검색</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">A</kbd></div><div class="text-gray-500">모든 프로젝트</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">B</kbd></div><div class="text-gray-500">현재 브랜치</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 2. MCP 서버 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-cyan-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">🔌 MCP 서버</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-cyan-600 pb-0.5 border-b border-gray-200 mb-1">서버 추가</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--transport http</code></div><div class="text-gray-500">원격 HTTP (권장)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--transport stdio</code></div><div class="text-gray-500">로컬 프로세스</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--transport sse</code></div><div class="text-gray-500">원격 SSE</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-cyan-600 pb-0.5 border-b border-gray-200 mb-1">범위</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.claude.json</code></div><div class="text-gray-500">로컬 (프로젝트별)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.mcp.json</code></div><div class="text-gray-500">프로젝트 (VCS 공유)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude.json</code></div><div class="text-gray-500">사용자 (전역)</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-cyan-600 pb-0.5 border-b border-gray-200 mb-1">관리</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/mcp</code></div><div class="text-gray-500">인터랙티브 UI</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude mcp list</code></div><div class="text-gray-500">모든 서버 목록</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude mcp serve</code></div><div class="text-gray-500">CC를 MCP 서버로 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28 text-gray-700 font-medium">Elicitation</div><div class="text-gray-500">작업 중 입력 요청 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 3. 슬래시 명령어 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-emerald-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">⚡ 슬래시 명령어</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-emerald-600 pb-0.5 border-b border-gray-200 mb-1">세션</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/clear</code></div><div class="text-gray-500">대화 초기화</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/compact [초점]</code></div><div class="text-gray-500">컨텍스트 압축</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/resume</code></div><div class="text-gray-500">세션 재개/전환</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/rename [이름]</code></div><div class="text-gray-500">현재 세션 이름 지정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/branch [이름]</code></div><div class="text-gray-500">대화 분기 (/fork 별칭)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/cost</code></div><div class="text-gray-500">토큰 사용량 통계</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/context</code></div><div class="text-gray-500">컨텍스트 시각화 (그리드)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/diff</code></div><div class="text-gray-500">인터랙티브 diff 뷰어</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/copy</code></div><div class="text-gray-500">마지막 응답 복사</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/export</code></div><div class="text-gray-500">대화 내보내기</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-emerald-600 pb-0.5 border-b border-gray-200 mb-1">설정</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/config</code></div><div class="text-gray-500">설정 열기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/model [모델]</code></div><div class="text-gray-500">모델 전환</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/fast [on|off]</code></div><div class="text-gray-500">빠른 모드 토글</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/vim</code></div><div class="text-gray-500">Vim 모드 토글</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/theme</code></div><div class="text-gray-500">색상 테마 변경</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/permissions</code></div><div class="text-gray-500">권한 확인/수정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/effort [레벨]</code></div><div class="text-gray-500">노력 수준 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/color [색상]</code></div><div class="text-gray-500">프롬프트 바 색상 설정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/keybindings</code></div><div class="text-gray-500">키보드 단축키 설정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/terminal-setup</code></div><div class="text-gray-500">터미널 키바인딩 설정</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-emerald-600 pb-0.5 border-b border-gray-200 mb-1">도구</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/init</code></div><div class="text-gray-500">CLAUDE.md 생성</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/memory</code></div><div class="text-gray-500">CLAUDE.md 파일 편집</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/mcp</code></div><div class="text-gray-500">MCP 서버 관리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/hooks</code></div><div class="text-gray-500">훅 관리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/skills</code></div><div class="text-gray-500">사용 가능한 스킬 목록</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/agents</code></div><div class="text-gray-500">에이전트 관리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/chrome</code></div><div class="text-gray-500">Chrome 연동</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/reload-plugins</code></div><div class="text-gray-500">플러그인 핫 리로드</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/add-dir &lt;경로&gt;</code></div><div class="text-gray-500">작업 디렉터리 추가</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-emerald-600 pb-0.5 border-b border-gray-200 mb-1">특수</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/btw &lt;질문&gt;</code></div><div class="text-gray-500">사이드 질문 (컨텍스트 무관)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/plan [설명]</code></div><div class="text-gray-500">플랜 모드 (+ 자동 시작)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/loop [간격]</code></div><div class="text-gray-500">반복 작업 예약</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/voice</code></div><div class="text-gray-500">푸시투토크 음성 (20개 언어)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/doctor</code></div><div class="text-gray-500">설치 진단</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/pr-comments</code></div><div class="text-gray-500">GitHub PR 댓글 가져오기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/stats</code></div><div class="text-gray-500">사용 통계 및 선호도</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/insights</code></div><div class="text-gray-500">세션 분석 보고서</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/desktop</code></div><div class="text-gray-500">Desktop 앱에서 계속</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/remote-control</code></div><div class="text-gray-500">claude.ai/code 브릿지 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/usage</code></div><div class="text-gray-500">요금제 한도 & 속도 제한</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/schedule</code></div><div class="text-gray-500">클라우드 예약 작업</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/security-review</code></div><div class="text-gray-500">보안 분석</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/help</code></div><div class="text-gray-500">도움말 표시</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/feedback</code></div><div class="text-gray-500">피드백 제출 (/bug 별칭)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/release-notes</code></div><div class="text-gray-500">전체 변경 로그 보기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/stickers</code></div><div class="text-gray-500">스티커 주문!</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 4. 메모리 & 파일 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-amber-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">📁 메모리 & 파일</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-amber-600 pb-0.5 border-b border-gray-200 mb-1">CLAUDE.md 위치</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">./CLAUDE.md</code></div><div class="text-gray-500">프로젝트 (팀 공유)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude/CLAUDE.md</code></div><div class="text-gray-500">개인 (모든 프로젝트)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/etc/claude-code/</code></div><div class="text-gray-500">관리형 (조직 전체)</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-amber-600 pb-0.5 border-b border-gray-200 mb-1">규칙 & 가져오기</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.claude/rules/*.md</code></div><div class="text-gray-500">프로젝트 규칙</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude/rules/*.md</code></div><div class="text-gray-500">사용자 규칙</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">paths:</code> <span class="text-gray-600">프론트매터</span></div><div class="text-gray-500">경로별 규칙 적용</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">@path/to/file</code></div><div class="text-gray-500">CLAUDE.md에서 가져오기</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-amber-600 pb-0.5 border-b border-gray-200 mb-1">자동 메모리</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude/projects/&lt;proj&gt;/memory/</code></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">MEMORY.md + 토픽 파일, 자동 로드</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 5. 워크플로우 & 팁 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-violet-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">🧠 워크플로우 & 팁</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">플랜 모드</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Shift+Tab</kbd> <span class="text-gray-500">순환: 일반 → 자동수락 → 플랜</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--permission-mode plan</code>: <span class="text-gray-500">플랜 모드로 시작</span></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">사고(Thinking) & 노력 수준</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><kbd class="k-alt inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Alt+T</kbd>: <span class="text-gray-500">사고 모드 켜기/끄기</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">"ultrathink": 해당 턴 최대 노력</li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+O</kbd>: <span class="text-gray-500">사고 과정 보기 (상세 모드)</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/effort</code>: <span class="text-gray-500">○ low · ◐ med · ● high</span> <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">Git Worktree</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--worktree name</code>: <span class="text-gray-500">기능별 격리 브랜치</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">isolation: worktree</code>: <span class="text-gray-500">에이전트 자체 워크트리</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">sparsePaths</code>: <span class="text-gray-500">필요한 디렉터리만 체크아웃</span> <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/batch</code>: <span class="text-gray-500">워크트리 자동 생성</span></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">음성 모드</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/voice</code>: <span class="text-gray-500">푸시투토크 활성화</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Space</kbd> <span class="text-gray-500">(홀드): 녹음, 놓으면 전송</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">20개 언어 지원 (EN, ES, FR, DE, KO 등)</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">컨텍스트 관리</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/context</code>: <span class="text-gray-500">사용량 + 최적화 팁</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/compact [초점]</code>: <span class="text-gray-500">초점 맞춰 압축</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">~95% 용량 시 자동 압축</li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">Opus 4.6 기준 1M 컨텍스트 (Max/Team/Enterprise)</li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 text-gray-500">CLAUDE.md는 압축 후에도 유지</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">세션 활용</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -c</code>: <span class="text-gray-500">마지막 대화 이어서</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -r "이름"</code>: <span class="text-gray-500">이름으로 재개</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/btw 질문</code>: <span class="text-gray-500">사이드 질문, 컨텍스트 비용 없음</span></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">SDK / 헤드리스</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -p "쿼리"</code>: <span class="text-gray-500">비대화형 실행</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--output-format json</code>: <span class="text-gray-500">구조화된 출력</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--max-budget-usd 5</code>: <span class="text-gray-500">비용 한도</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">cat file | claude -p</code>: <span class="text-gray-500">파이프 입력</span></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-violet-600 pb-0.5 border-b border-gray-200 mb-1">스케줄링 & 원격</div>
+      <ul class="list-none space-y-0.5">
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/loop 5m msg</code>: <span class="text-gray-500">반복 작업</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/rc</code>: <span class="text-gray-500">원격 제어</span></li>
+        <li class="pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--remote</code>: <span class="text-gray-500">claude.ai 웹 세션</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 6. 설정 & 환경변수 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-red-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">⚙️ 설정 & 환경변수</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-red-600 pb-0.5 border-b border-gray-200 mb-1">설정 파일</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude/settings.json</code></div><div class="text-gray-500">사용자 설정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.claude/settings.json</code></div><div class="text-gray-500">프로젝트 (공유)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.claude/settings.local.json</code></div><div class="text-gray-500">로컬 전용</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude.json</code></div><div class="text-gray-500">OAuth, MCP, 상태</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.mcp.json</code></div><div class="text-gray-500">프로젝트 MCP 서버</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-red-600 pb-0.5 border-b border-gray-200 mb-1">주요 설정</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">modelOverrides</code></div><div class="text-gray-500">모델 선택기 → 커스텀 ID 매핑</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">autoMemoryDirectory</code></div><div class="text-gray-500">커스텀 메모리 디렉터리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">worktree.sparsePaths</code></div><div class="text-gray-500">스파스 체크아웃 디렉터리 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-red-600 pb-0.5 border-b border-gray-200 mb-1">주요 환경변수</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">ANTHROPIC_API_KEY</code></div><div class="text-gray-500">API 키</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">ANTHROPIC_MODEL</code></div><div class="text-gray-500">모델 지정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_EFFORT_LEVEL</code></div><div class="text-gray-500">low / med / high</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">MAX_THINKING_TOKENS</code></div><div class="text-gray-500">0=끄기</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">ANTHROPIC_CUSTOM_MODEL_OPTION</code></div><div class="text-gray-500">커스텀 /model 항목</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_PLUGIN_SEED_DIR</code></div><div class="text-gray-500">다중 플러그인 시드 디렉터리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDECODE</code></div><div class="text-gray-500">CC 셸 감지 (=1)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">IS_DEMO</code></div><div class="text-gray-500">데모 모드 (이메일/조직 숨김)</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 7. 스킬 & 에이전트 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-blue-600 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">🔧 스킬 & 에이전트</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-blue-600 pb-0.5 border-b border-gray-200 mb-1">내장 스킬</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/simplify</code></div><div class="text-gray-500">코드 리뷰 (3개 병렬 에이전트)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/batch</code></div><div class="text-gray-500">대규모 병렬 변경 (5-30 워크트리)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/debug [설명]</code></div><div class="text-gray-500">디버그 로그로 문제 해결</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/loop [간격]</code></div><div class="text-gray-500">반복 예약 작업</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/claude-api</code></div><div class="text-gray-500">API + SDK 레퍼런스 로드</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-blue-600 pb-0.5 border-b border-gray-200 mb-1">커스텀 스킬 위치</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">.claude/skills/&lt;이름&gt;/</code></div><div class="text-gray-500">프로젝트 스킬</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">~/.claude/skills/&lt;이름&gt;/</code></div><div class="text-gray-500">개인 스킬</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-blue-600 pb-0.5 border-b border-gray-200 mb-1">스킬 프론트매터</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">description</code></div><div class="text-gray-500">자동 호출 트리거</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">allowed-tools</code></div><div class="text-gray-500">권한 프롬프트 생략</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">model</code></div><div class="text-gray-500">스킬용 모델 재정의</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">effort</code></div><div class="text-gray-500">노력 수준 재정의 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">context: fork</code></div><div class="text-gray-500">서브에이전트에서 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">$ARGUMENTS</code></div><div class="text-gray-500">사용자 입력 플레이스홀더</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">${CLAUDE_SKILL_DIR}</code></div><div class="text-gray-500">스킬 자체 디렉터리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">!`cmd`</code></div><div class="text-gray-500">동적 컨텍스트 주입</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-blue-600 pb-0.5 border-b border-gray-200 mb-1">내장 에이전트</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28 font-semibold text-gray-700">Explore</div><div class="text-gray-500">빠른 읽기 전용 (Haiku)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28 font-semibold text-gray-700">Plan</div><div class="text-gray-500">플랜 모드용 리서치</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28 font-semibold text-gray-700">General</div><div class="text-gray-500">전체 도구, 복잡한 작업</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28 font-semibold text-gray-700">Bash</div><div class="text-gray-500">터미널 별도 컨텍스트</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-blue-600 pb-0.5 border-b border-gray-200 mb-1">에이전트 프론트매터</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">permissionMode</code></div><div class="text-gray-500">default/acceptEdits/plan 등</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">isolation: worktree</code></div><div class="text-gray-500">Git 워크트리에서 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">memory</code></div><div class="text-gray-500">user|project 영속 메모리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">background: true</code></div><div class="text-gray-500">백그라운드 작업</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">maxTurns</code></div><div class="text-gray-500">에이전트 턴 제한</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">SendMessage</code></div><div class="text-gray-500">에이전트 재개 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 8. CLI & 플래그 ===== -->
+<div class="bg-white rounded-xl overflow-hidden shadow-sm print:shadow-none print:border print:border-gray-200 print:break-inside-avoid">
+  <div class="bg-pink-700 px-3 py-2 text-white font-bold text-sm flex items-center gap-1.5">🖥️ CLI & 플래그</div>
+  <div class="p-2.5 space-y-2">
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-pink-700 pb-0.5 border-b border-gray-200 mb-1">핵심 명령어</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude</code></div><div class="text-gray-500">대화형 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude "질문"</code></div><div class="text-gray-500">프롬프트와 함께 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -p "질문"</code></div><div class="text-gray-500">헤드리스 실행</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -c</code></div><div class="text-gray-500">마지막 대화 이어서</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude -r "이름"</code></div><div class="text-gray-500">이름으로 재개</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude update</code></div><div class="text-gray-500">업데이트</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-pink-700 pb-0.5 border-b border-gray-200 mb-1">주요 플래그</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--model</code></div><div class="text-gray-500">모델 지정</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">-w</code></div><div class="text-gray-500">Git 워크트리</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">-n / --name</code></div><div class="text-gray-500">세션 이름</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--add-dir</code></div><div class="text-gray-500">디렉터리 추가</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--agent</code></div><div class="text-gray-500">에이전트 사용</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--allowedTools</code></div><div class="text-gray-500">도구 사전 승인</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--output-format</code></div><div class="text-gray-500">json / stream 출력 형식</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--json-schema</code></div><div class="text-gray-500">구조화된 출력</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--max-turns</code></div><div class="text-gray-500">턴 제한</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--max-budget-usd</code></div><div class="text-gray-500">비용 한도</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--console</code></div><div class="text-gray-500">Anthropic Console로 인증</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--verbose</code></div><div class="text-gray-500">상세 모드</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--bare</code></div><div class="text-gray-500">최소 헤드리스 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--channels</code></div><div class="text-gray-500">권한 릴레이/MCP 푸시 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--remote</code></div><div class="text-gray-500">웹 세션</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--effort</code></div><div class="text-gray-500">low / med / high / max</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--permission-mode</code></div><div class="text-gray-500">plan / default 등</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs text-red-600">--dangerously-skip-permissions</code></div><div class="text-gray-500">모든 프롬프트 생략 ⚠️</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--chrome</code></div><div class="text-gray-500">Chrome 연동</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-bold text-2xs uppercase tracking-wider text-pink-700 pb-0.5 border-b border-gray-200 mb-1">권한 모드</div>
+      <div class="divide-y divide-gray-100">
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">default</code></div><div class="text-gray-500">권한 확인 프롬프트 표시</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">acceptEdits</code></div><div class="text-gray-500">편집 자동 수락</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">plan</code></div><div class="text-gray-500">읽기 전용 모드</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">dontAsk</code></div><div class="text-gray-500">허용 외 거부</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">bypassPermissions</code></div><div class="text-gray-500">모두 건너뛰기</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /grid -->
+
+<script>
+function setOS(os) {
+  document.getElementById('btn-mac').classList.toggle('bg-white/25', os === 'mac');
+  document.getElementById('btn-mac').classList.toggle('!text-white', os === 'mac');
+  document.getElementById('btn-win').classList.toggle('bg-white/25', os === 'win');
+  document.getElementById('btn-win').classList.toggle('!text-white', os === 'win');
+
+  document.querySelectorAll('kbd.k').forEach(el => {
+    el.textContent = el.textContent.replace(/^(Ctrl|⌃)/, os === 'mac' ? '⌃' : 'Ctrl');
+  });
+  document.querySelectorAll('kbd.k-alt').forEach(el => {
+    el.textContent = el.textContent.replace(/^(Alt|⌥)/, os === 'mac' ? '⌥' : 'Alt');
+  });
+
+  localStorage.setItem('cc-cheat-os', os);
+}
+
+(function() {
+  const saved = localStorage.getItem('cc-cheat-os');
+  if (saved) { setOS(saved); return; }
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  setOS(isMac ? 'mac' : 'win');
+})();
+</script>
+
+</body>
+</html>
