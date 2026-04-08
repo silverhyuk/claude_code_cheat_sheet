@@ -160,17 +160,14 @@ def generate_update_with_openai(
 {current_html}
 ```"""
 
-    log.info("OpenAI gpt-5.3-codex API로 업데이트 생성 중...")
-    response = client.chat.completions.create(
+    log.info("OpenAI gpt-5.3-codex Responses API로 업데이트 생성 중...")
+    response = client.responses.create(
         model="gpt-5.3-codex",
-        max_completion_tokens=16000,
-        messages=[
-            {"role": "developer", "content": "당신은 HTML 코드 생성 전문가입니다. 요청받은 HTML만 출력하세요."},
-            {"role": "user", "content": prompt},
-        ],
+        instructions="당신은 HTML 코드 생성 전문가입니다. 요청받은 HTML만 출력하세요.",
+        input=prompt,
     )
 
-    response_text = response.choices[0].message.content
+    response_text = response.output_text
 
     # HTML만 추출
     html_match = re.search(r"(<!DOCTYPE html>.*</html>)", response_text, re.DOTALL)
