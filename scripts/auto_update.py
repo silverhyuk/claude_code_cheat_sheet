@@ -128,7 +128,10 @@ def get_new_items_from_api(new_releases: list[dict]) -> list[dict] | None:
 
 {releases_text}
 
-위 릴리스 노트에서 **치트시트에 추가할 만한 새 기능, 명령어, 설정, 환경변수, 플래그, 단축키** 항목만 추출하세요.
+위 릴리스 노트에서 치트시트에 반영할 변경사항을 추출하세요:
+1. **추가(add)**: 새 기능, 명령어, 설정, 환경변수, 플래그, 단축키
+2. **삭제(remove)**: "Removed ..." 로 시작하는 항목 (제거된 명령어, 설정 등)
+
 버그 수정, 성능 개선, 내부 변경 등 치트시트에 넣을 필요 없는 항목은 제외하세요.
 
 치트시트의 섹션/서브섹션 구조:
@@ -139,15 +142,16 @@ def get_new_items_from_api(new_releases: list[dict]) -> list[dict] | None:
 ```json
 [
   {{
+    "action": "add 또는 remove",
     "section": "섹션명 (위 구조에서 선택)",
     "subsection": "서브섹션명 (위 구조에서 선택)",
     "key": "항목의 키 (예: Ctrl+X, /command, --flag, ENV_VAR 등)",
-    "desc": "한국어 간결한 설명 (10자~30자)"
+    "desc": "한국어 간결한 설명 (10자~30자, action이 remove면 빈 문자열 가능)"
   }}
 ]
 ```
 
-추가할 항목이 없으면 빈 배열 `[]`을 출력하세요."""
+반영할 항목이 없으면 빈 배열 `[]`을 출력하세요."""
 
     log.info("OpenAI API로 추가 항목 추출 중...")
     response = client.responses.create(
@@ -235,8 +239,19 @@ def find_subsection_insert_pos(lines: list[str], subsection_name: str) -> int | 
     return last_item_idx
 
 
-def insert_items_into_html(html: str, items: list[dict], latest_version: str) -> str:
-    """항목들을 index.html의 적절한 위치에 삽입"""
+def remove_item_from_lines(lines: list[str], key: str) -> bool:
+    """index.html에서 key를 포함하는 항목 행을 삭제. 삭제 성공 시 True."""
+    key_escaped = re.escape(key)
+    for i, line in enumerate(lines):
+        if re.search(key_escaped, line) and 'class="flex gap-1.5 py-0.5' in line:
+            lines.pop(i)
+            log.info(f"  삭제 완료: {key} (line {i + 1})")
+            return True
+    return False
+
+
+def apply_items_to_html(html: str, items: list[dict], latest_version: str) -> str:
+    """항목들을 index.html에 추가/삭제"""
     lines = html.split("\n")
 
     # 버전 업데이트
@@ -245,10 +260,29 @@ def insert_items_into_html(html: str, items: list[dict], latest_version: str) ->
             lines[i] = re.sub(r"v[\d.]+", latest_version, line)
             break
 
-    # 삽입할 항목을 서브섹션별로 그룹핑 (역순으로 삽입해야 인덱스가 밀리지 않음)
+    # ─── 삭제(remove) 먼저 처리 ───
+    remove_count = 0
+    for item in items:
+        if item.get("action") != "remove":
+            continue
+        key = item.get("key", "")
+        if not key:
+            continue
+        if remove_item_from_lines(lines, key):
+            remove_count += 1
+        else:
+            log.warning(f"  삭제 대상을 찾지 못함: {key}")
+
+    if remove_count:
+        log.info(f"총 {remove_count}개 항목 삭제 완료")
+
+    # ─── 추가(add) 처리 ───
     insertions: list[tuple[int, str]] = []  # (line_idx, html)
 
     for item in items:
+        if item.get("action", "add") != "add":
+            continue
+
         subsection = item.get("subsection", "")
         key = item.get("key", "")
         desc = item.get("desc", "")
@@ -271,17 +305,16 @@ def insert_items_into_html(html: str, items: list[dict], latest_version: str) ->
         row_html = build_row_html(key, desc)
         insertions.append((pos, row_html))
 
-    if not insertions:
-        log.info("삽입할 새 항목이 없습니다.")
-        return html
+    if insertions:
+        # 역순 정렬 (뒤에서부터 삽입해야 앞의 인덱스가 밀리지 않음)
+        insertions.sort(key=lambda x: x[0], reverse=True)
+        for pos, row_html in insertions:
+            lines.insert(pos + 1, row_html)
+        log.info(f"총 {len(insertions)}개 항목 추가 완료")
 
-    # 역순 정렬 (뒤에서부터 삽입해야 앞의 인덱스가 밀리지 않음)
-    insertions.sort(key=lambda x: x[0], reverse=True)
+    if not remove_count and not insertions:
+        log.info("추가/삭제할 항목이 없습니다.")
 
-    for pos, row_html in insertions:
-        lines.insert(pos + 1, row_html)
-
-    log.info(f"총 {len(insertions)}개 항목 삽입 완료")
     return "\n".join(lines)
 
 
@@ -393,7 +426,7 @@ def main():
 
     # 6. index.html에 항목 삽입
     current_html = INDEX_HTML.read_text(encoding="utf-8")
-    updated_html = insert_items_into_html(current_html, new_items, latest_version)
+    updated_html = apply_items_to_html(current_html, new_items, latest_version)
 
     INDEX_HTML.write_text(updated_html, encoding="utf-8")
     log.info("index.html 업데이트 완료")
