@@ -172,14 +172,27 @@ def generate_update_with_openai(
     # HTML만 추출
     html_match = re.search(r"(<!DOCTYPE html>.*</html>)", response_text, re.DOTALL)
     if html_match:
-        return html_match.group(1)
+        result = html_match.group(1)
+    elif response_text.strip().startswith("<!DOCTYPE") or response_text.strip().startswith("<html"):
+        result = response_text.strip()
+    else:
+        log.error("API 응답에서 유효한 HTML을 추출할 수 없습니다")
+        return None
 
-    # 이미 HTML인 경우
-    if response_text.strip().startswith("<!DOCTYPE") or response_text.strip().startswith("<html"):
-        return response_text.strip()
+    # ─── 안전장치: 원본 대비 너무 짧으면 거부 ───
+    current_len = len(current_html)
+    result_len = len(result)
+    ratio = result_len / current_len if current_len > 0 else 0
+    log.info(f"HTML 크기 비교: 원본 {current_len:,}자 → 생성 {result_len:,}자 (비율: {ratio:.1%})")
 
-    log.error("Claude 응답에서 유효한 HTML을 추출할 수 없습니다")
-    return None
+    if ratio < 0.8:
+        log.error(
+            f"생성된 HTML이 원본의 {ratio:.0%} 크기입니다. "
+            f"잘린 응답으로 판단하여 업데이트를 거부합니다."
+        )
+        return None
+
+    return result
 
 
 # ─── 4. VERSION.md 업데이트 ─────────────────────────────────────────
