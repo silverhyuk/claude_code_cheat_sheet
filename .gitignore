@@ -6,3 +6,7 @@
 .vscode/
 .idea/
 .claude/
+.env
+logs/
+venv/
+.venv/
