@@ -4,7 +4,7 @@ Claude Code 치트시트 자동 업데이트 스크립트
 
 1. GitHub anthropics/claude-code CHANGELOG.md에서 최신 릴리스 정보 파싱
 2. VERSION.md 의 applied_version과 비교
-3. 새 버전이 있으면 index.html 업데이트 지시 + VERSION.md 갱신
+3. 새 버전이 있으면 OpenAI API로 추가 항목을 JSON으로 받아 index.html에 삽입
 4. git commit & push
 
 필요 패키지: pip install requests openai
@@ -35,6 +35,19 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+# ─── index.html 섹션 → 서브섹션 매핑 ────────────────────────────────
+# API에게 이 목록을 알려주고, 각 항목이 어디에 들어갈지 지정하게 함
+SECTIONS = {
+    "키보드 단축키": ["일반 조작", "모드 전환", "입력", "접두사", "세션 선택기"],
+    "MCP 서버": ["서버 추가", "범위", "관리"],
+    "슬래시 명령어": ["세션", "설정", "도구", "특수"],
+    "메모리 & 파일": ["CLAUDE.md 위치", "규칙 & 가져오기", "자동 메모리"],
+    "워크플로우 & 팁": ["플랜 모드", "사고(Thinking) & 노력 수준", "Git Worktree", "음성 모드", "컨텍스트 관리", "세션 활용", "SDK / 헤드리스", "스케줄링 & 원격"],
+    "설정 & 환경변수": ["설정 파일", "주요 설정", "주요 환경변수", "Hooks 이벤트"],
+    "스킬 & 에이전트": ["내장 스킬", "커스텀 스킬 위치", "스킬 프론트매터", "내장 에이전트", "에이전트 프론트매터"],
+    "CLI & 플래그": ["핵심 명령어", "주요 플래그", "권한 모드"],
+}
+
 
 # ─── 1. VERSION.md에서 현재 적용 버전 읽기 ─────────────────────────
 def get_applied_version() -> str:
@@ -62,34 +75,14 @@ def fetch_changelog() -> str:
 def parse_changelog(markdown: str) -> list[dict]:
     """
     CHANGELOG.md 마크다운에서 버전별 릴리스 정보를 파싱.
-
-    형식:
-        ## 2.1.96
-        - Fixed ...
-        - Added ...
-
-        ## 2.1.94
-        - ...
-
     반환: [{"version": "v2.1.96", "content": "- Fixed ...\n- Added ..."}, ...]
-    최신순으로 정렬됨.
     """
     releases = []
-
-    # "## 2.1.96" 패턴으로 분할
-    # 각 블록은 "## 버전번호\n내용" 형태
     blocks = re.split(r"^## (\d+\.\d+\.\d+)\s*$", markdown, flags=re.MULTILINE)
-
-    # blocks[0]은 "# Changelog\n" 같은 헤더 부분 (버림)
-    # blocks[1] = "2.1.96", blocks[2] = 내용, blocks[3] = "2.1.94", blocks[4] = 내용 ...
     for i in range(1, len(blocks) - 1, 2):
         version = f"v{blocks[i]}"
         content = blocks[i + 1].strip()
-        releases.append({
-            "version": version,
-            "content": content,
-        })
-
+        releases.append({"version": version, "content": content})
     return releases
 
 
@@ -101,26 +94,20 @@ def get_new_releases(releases: list[dict], applied_version: str) -> list[dict]:
         return tuple(int(n) for n in nums)
 
     applied = version_tuple(applied_version)
-    new = []
-    for r in releases:
-        if version_tuple(r["version"]) > applied:
-            new.append(r)
-    # 오래된 순으로 정렬 (적용 순서)
+    new = [r for r in releases if version_tuple(r["version"]) > applied]
     new.sort(key=lambda r: version_tuple(r["version"]))
     return new
 
 
-# ─── 3. OpenAI API로 index.html 업데이트 생성 ──────────────────────
-def generate_update_with_openai(
-    new_releases: list[dict], current_html: str
-) -> str | None:
+# ─── 3. OpenAI API로 추가 항목 JSON 생성 ────────────────────────────
+def get_new_items_from_api(new_releases: list[dict]) -> list[dict] | None:
     """
-    OpenAI API를 사용해 새 릴리스 정보를 반영한 index.html을 생성.
-    API 키가 없으면 None 반환.
+    OpenAI API에 릴리스 노트를 보내고, 치트시트에 추가할 항목을 JSON으로 받음.
+    반환 형식: [{"section": "...", "subsection": "...", "key": "...", "desc": "..."}, ...]
     """
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        log.warning("OPENAI_API_KEY가 설정되지 않았습니다. 업데이트 건너뜀.")
+        log.warning("OPENAI_API_KEY가 설정되지 않았습니다.")
         return None
 
     try:
@@ -132,92 +119,190 @@ def generate_update_with_openai(
     client = OpenAI(api_key=api_key)
 
     releases_text = "\n\n".join(
-        f"### {r['version']}\n{r.get('date', '')}\n{r['content']}"
-        for r in new_releases
+        f"### {r['version']}\n{r['content']}" for r in new_releases
     )
 
-    latest_version = new_releases[-1]["version"]
+    sections_desc = json.dumps(SECTIONS, ensure_ascii=False, indent=2)
 
-    prompt = f"""당신은 Claude Code 치트시트(HTML) 업데이트 전문가입니다.
-
-아래는 새로 추가된 Claude Code 릴리스 노트입니다:
+    prompt = f"""아래는 Claude Code의 새로운 릴리스 노트입니다:
 
 {releases_text}
 
-현재 index.html의 내용이 주어집니다. 다음 규칙에 따라 업데이트하세요:
+위 릴리스 노트에서 **치트시트에 추가할 만한 새 기능, 명령어, 설정, 환경변수, 플래그, 단축키** 항목만 추출하세요.
+버그 수정, 성능 개선, 내부 변경 등 치트시트에 넣을 필요 없는 항목은 제외하세요.
 
-1. 헤더의 버전을 {latest_version}으로 변경
-2. 새 기능/변경사항을 해당하는 섹션에 추가 (키보드 단축키, 슬래시 커맨드, CLI 플래그, 환경변수, Hooks 등)
-3. 새로 추가된 항목에는 `<span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span>` 뱃지를 붙이세요
-4. 기존에 NEW 뱃지가 붙어있던 항목 중 이전 릴리스에 해당하는 것들의 NEW 뱃지는 유지하세요 (제거하지 마세요)
-5. 한국어로 간결하게 설명
-6. 기존 HTML 구조와 스타일을 정확히 따르세요
+치트시트의 섹션/서브섹션 구조:
+{sections_desc}
 
-전체 index.html을 출력하세요. HTML만 출력하고 다른 설명은 하지 마세요.
+각 항목을 아래 JSON 배열 형식으로 출력하세요. JSON만 출력하고 다른 텍스트는 절대 포함하지 마세요:
 
-현재 index.html:
-```html
-{current_html}
-```"""
+```json
+[
+  {{
+    "section": "섹션명 (위 구조에서 선택)",
+    "subsection": "서브섹션명 (위 구조에서 선택)",
+    "key": "항목의 키 (예: Ctrl+X, /command, --flag, ENV_VAR 등)",
+    "desc": "한국어 간결한 설명 (10자~30자)"
+  }}
+]
+```
 
-    log.info("OpenAI gpt-5.3-codex Responses API로 업데이트 생성 중...")
+추가할 항목이 없으면 빈 배열 `[]`을 출력하세요."""
+
+    log.info("OpenAI API로 추가 항목 추출 중...")
     response = client.responses.create(
         model="gpt-5.3-codex",
-        instructions="당신은 HTML 코드 생성 전문가입니다. 요청받은 HTML만 출력하세요.",
+        instructions="당신은 Claude Code 전문가입니다. 요청된 JSON만 출력하세요. 마크다운 코드블록 없이 순수 JSON만 출력하세요.",
         input=prompt,
     )
 
-    response_text = response.output_text
+    response_text = response.output_text.strip()
+    log.info(f"API 응답 길이: {len(response_text)}자")
 
-    # HTML만 추출
-    html_match = re.search(r"(<!DOCTYPE html>.*</html>)", response_text, re.DOTALL)
-    if html_match:
-        result = html_match.group(1)
-    elif response_text.strip().startswith("<!DOCTYPE") or response_text.strip().startswith("<html"):
-        result = response_text.strip()
+    # JSON 추출 (코드블록 안에 있을 수 있음)
+    json_match = re.search(r"\[.*\]", response_text, re.DOTALL)
+    if not json_match:
+        log.error(f"API 응답에서 JSON을 추출할 수 없습니다: {response_text[:200]}")
+        return None
+
+    try:
+        items = json.loads(json_match.group(0))
+    except json.JSONDecodeError as e:
+        log.error(f"JSON 파싱 실패: {e}\n응답: {response_text[:500]}")
+        return None
+
+    if not isinstance(items, list):
+        log.error("API 응답이 배열이 아닙니다")
+        return None
+
+    log.info(f"추출된 항목: {len(items)}개")
+    for item in items:
+        log.info(f"  [{item.get('section')}/{item.get('subsection')}] {item.get('key')} → {item.get('desc')}")
+
+    return items
+
+
+# ─── 4. index.html에 항목 삽입 ──────────────────────────────────────
+NEW_BADGE = '<span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span>'
+
+
+def build_row_html(key: str, desc: str) -> str:
+    """치트시트 한 줄 HTML 생성"""
+    # key가 코드/명령어 형태인지 단축키 형태인지 판별
+    if key.startswith("Ctrl") or key.startswith("⌃") or key.startswith("Alt") or key.startswith("⌥") or key.startswith("Shift") or key.startswith("Esc"):
+        # 단축키 → kbd 태그
+        key_html = f'<kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">{key}</kbd>'
     else:
-        log.error("API 응답에서 유효한 HTML을 추출할 수 없습니다")
+        # 코드/명령어 → code 태그
+        key_html = f'<code class="bg-gray-100 rounded px-1 font-mono text-2xs">{key}</code>'
+
+    return (
+        f'        <div class="flex gap-1.5 py-0.5 items-baseline">'
+        f'<div class="shrink-0 min-w-28">{key_html}</div>'
+        f'<div class="text-gray-500">{desc} {NEW_BADGE}</div></div>'
+    )
+
+
+def find_subsection_insert_pos(lines: list[str], subsection_name: str) -> int | None:
+    """
+    서브섹션의 마지막 항목 뒤 위치(= </div> 직전)를 찾음.
+    서브섹션 헤더를 찾고, 그 아래 divide-y div의 마지막 항목 위치를 반환.
+    """
+    # 서브섹션 헤더 찾기
+    header_idx = None
+    for i, line in enumerate(lines):
+        if f">{subsection_name}</div>" in line:
+            header_idx = i
+            break
+
+    if header_idx is None:
         return None
 
-    # ─── 안전장치: 원본 대비 너무 짧으면 거부 ───
-    current_len = len(current_html)
-    result_len = len(result)
-    ratio = result_len / current_len if current_len > 0 else 0
-    log.info(f"HTML 크기 비교: 원본 {current_len:,}자 → 생성 {result_len:,}자 (비율: {ratio:.1%})")
+    # 헤더 다음의 <div class="divide-y ..."> 블록에서 마지막 항목 찾기
+    # 항목은 <div class="flex gap-1.5 py-0.5 ..."> 패턴
+    last_item_idx = None
+    for i in range(header_idx + 1, min(header_idx + 80, len(lines))):
+        line = lines[i].strip()
+        if 'class="flex gap-1.5 py-0.5' in lines[i]:
+            last_item_idx = i
+        # 서브섹션 블록의 끝 (다음 서브섹션 헤더 또는 섹션 끝)
+        if last_item_idx and (
+            'font-bold text-2xs uppercase tracking-wider' in line
+            or line == '</div>'  # divide-y 닫힘
+        ):
+            break
 
-    if ratio < 0.8:
-        log.error(
-            f"생성된 HTML이 원본의 {ratio:.0%} 크기입니다. "
-            f"잘린 응답으로 판단하여 업데이트를 거부합니다."
-        )
-        return None
-
-    return result
+    return last_item_idx
 
 
-# ─── 4. VERSION.md 업데이트 ─────────────────────────────────────────
+def insert_items_into_html(html: str, items: list[dict], latest_version: str) -> str:
+    """항목들을 index.html의 적절한 위치에 삽입"""
+    lines = html.split("\n")
+
+    # 버전 업데이트
+    for i, line in enumerate(lines):
+        if "&middot; 한국어" in line:
+            lines[i] = re.sub(r"v[\d.]+", latest_version, line)
+            break
+
+    # 삽입할 항목을 서브섹션별로 그룹핑 (역순으로 삽입해야 인덱스가 밀리지 않음)
+    insertions: list[tuple[int, str]] = []  # (line_idx, html)
+
+    for item in items:
+        subsection = item.get("subsection", "")
+        key = item.get("key", "")
+        desc = item.get("desc", "")
+
+        if not subsection or not key or not desc:
+            log.warning(f"불완전한 항목 건너뜀: {item}")
+            continue
+
+        # 중복 체크: 이미 같은 key가 있는지
+        key_escaped = re.escape(key)
+        if any(re.search(key_escaped, line) for line in lines):
+            log.info(f"  중복 건너뜀: {key}")
+            continue
+
+        pos = find_subsection_insert_pos(lines, subsection)
+        if pos is None:
+            log.warning(f"  서브섹션 '{subsection}'을 찾을 수 없음: {key}")
+            continue
+
+        row_html = build_row_html(key, desc)
+        insertions.append((pos, row_html))
+
+    if not insertions:
+        log.info("삽입할 새 항목이 없습니다.")
+        return html
+
+    # 역순 정렬 (뒤에서부터 삽입해야 앞의 인덱스가 밀리지 않음)
+    insertions.sort(key=lambda x: x[0], reverse=True)
+
+    for pos, row_html in insertions:
+        lines.insert(pos + 1, row_html)
+
+    log.info(f"총 {len(insertions)}개 항목 삽입 완료")
+    return "\n".join(lines)
+
+
+# ─── 5. VERSION.md 업데이트 ─────────────────────────────────────────
 def update_version_md(new_version: str, summary: str):
     """VERSION.md에 새 버전 정보 반영"""
     text = VERSION_MD.read_text(encoding="utf-8")
     today = datetime.now().strftime("%Y-%m-%d")
 
-    # applied_version 업데이트
     text = re.sub(
         r"(\*\*applied_version\*\*:\s*)v[\d.]+",
         f"\\g<1>{new_version}",
         text,
     )
-
-    # last_updated 업데이트
     text = re.sub(
         r"(\*\*last_updated\*\*:\s*)\d{4}-\d{2}-\d{2}",
         f"\\g<1>{today}",
         text,
     )
 
-    # 히스토리 테이블에 새 행 추가
     new_row = f"| {new_version} | {today} | {summary} |"
-    # 테이블 마지막 행 뒤에 추가
     lines = text.split("\n")
     table_end = -1
     for i, line in enumerate(lines):
@@ -231,7 +316,7 @@ def update_version_md(new_version: str, summary: str):
     log.info(f"VERSION.md 업데이트 완료: {new_version}")
 
 
-# ─── 5. Git commit & push ──────────────────────────────────────────
+# ─── 6. Git commit & push ──────────────────────────────────────────
 def git_commit_and_push(version: str):
     """변경사항을 git commit하고 push"""
     os.chdir(REPO_DIR)
@@ -239,7 +324,6 @@ def git_commit_and_push(version: str):
     def run(cmd: list[str]) -> subprocess.CompletedProcess:
         return subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_DIR)
 
-    # 변경사항 확인
     status = run(["git", "status", "--porcelain"])
     if not status.stdout.strip():
         log.info("변경사항 없음. 커밋 건너뜀.")
@@ -301,15 +385,16 @@ def main():
     for r in new_releases:
         log.info(f"  - {r['version']}")
 
-    # 5. Claude API로 index.html 업데이트
-    current_html = INDEX_HTML.read_text(encoding="utf-8")
-    updated_html = generate_update_with_openai(new_releases, current_html)
-
-    if updated_html is None:
-        log.error("index.html 업데이트 생성 실패. 종료.")
+    # 5. API로 추가 항목 추출
+    new_items = get_new_items_from_api(new_releases)
+    if new_items is None:
+        log.error("API에서 추가 항목을 가져오지 못했습니다. 종료.")
         sys.exit(1)
 
-    # 6. 파일 저장
+    # 6. index.html에 항목 삽입
+    current_html = INDEX_HTML.read_text(encoding="utf-8")
+    updated_html = insert_items_into_html(current_html, new_items, latest_version)
+
     INDEX_HTML.write_text(updated_html, encoding="utf-8")
     log.info("index.html 업데이트 완료")
 
