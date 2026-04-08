@@ -2,12 +2,12 @@
 """
 Claude Code 치트시트 자동 업데이트 스크립트
 
-1. https://code.claude.com/docs/en/changelog 에서 최신 릴리스 정보 스크래핑
+1. GitHub anthropics/claude-code CHANGELOG.md에서 최신 릴리스 정보 파싱
 2. VERSION.md 의 applied_version과 비교
 3. 새 버전이 있으면 index.html 업데이트 지시 + VERSION.md 갱신
 4. git commit & push
 
-필요 패키지: pip install requests beautifulsoup4 openai
+필요 패키지: pip install requests openai
 환경변수: OPENAI_API_KEY (OpenAI API 호출용)
 """
 
@@ -21,13 +21,12 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
 # ─── 설정 ───────────────────────────────────────────────────────────
 REPO_DIR = Path(__file__).resolve().parent.parent  # 프로젝트 루트
 INDEX_HTML = REPO_DIR / "index.html"
 VERSION_MD = REPO_DIR / "VERSION.md"
-CHANGELOG_URL = "https://code.claude.com/docs/en/changelog"
+CHANGELOG_URL = "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -48,10 +47,10 @@ def get_applied_version() -> str:
     return match.group(1)
 
 
-# ─── 2. 체인지로그 페이지 스크래핑 ──────────────────────────────────
+# ─── 2. GitHub CHANGELOG.md 가져오기 & 파싱 ─────────────────────────
 def fetch_changelog() -> str:
-    """체인지로그 페이지 HTML 가져오기"""
-    log.info(f"체인지로그 페이지 가져오는 중: {CHANGELOG_URL}")
+    """GitHub raw CHANGELOG.md 마크다운 텍스트 가져오기"""
+    log.info(f"CHANGELOG.md 가져오는 중: {CHANGELOG_URL}")
     headers = {
         "User-Agent": "Mozilla/5.0 (compatible; ClaudeCodeCheatSheet/1.0)"
     }
@@ -60,68 +59,35 @@ def fetch_changelog() -> str:
     return resp.text
 
 
-def parse_changelog(html: str) -> list[dict]:
+def parse_changelog(markdown: str) -> list[dict]:
     """
-    체인지로그 HTML에서 버전별 릴리스 정보를 파싱.
-    반환: [{"version": "v2.1.91", "date": "...", "content": "..."}, ...]
+    CHANGELOG.md 마크다운에서 버전별 릴리스 정보를 파싱.
+
+    형식:
+        ## 2.1.96
+        - Fixed ...
+        - Added ...
+
+        ## 2.1.94
+        - ...
+
+    반환: [{"version": "v2.1.96", "content": "- Fixed ...\n- Added ..."}, ...]
     최신순으로 정렬됨.
     """
-    soup = BeautifulSoup(html, "html.parser")
     releases = []
 
-    # 체인지로그 페이지 구조에 따라 파싱 (h2/h3 태그에 버전이 포함)
-    # 여러 가능한 구조에 대응
-    version_headers = soup.find_all(
-        lambda tag: tag.name in ("h1", "h2", "h3")
-        and re.search(r"v?\d+\.\d+\.\d+", tag.get_text())
-    )
+    # "## 2.1.96" 패턴으로 분할
+    # 각 블록은 "## 버전번호\n내용" 형태
+    blocks = re.split(r"^## (\d+\.\d+\.\d+)\s*$", markdown, flags=re.MULTILINE)
 
-    if not version_headers:
-        # 대안: 전체 텍스트에서 버전 패턴 추출
-        log.warning("헤더에서 버전을 찾지 못함. 전체 텍스트 파싱 시도...")
-        text = soup.get_text()
-        version_blocks = re.split(r"(?=(?:^|\n)#{1,3}\s*v?\d+\.\d+\.\d+)", text)
-        for block in version_blocks:
-            ver_match = re.search(r"(v?\d+\.\d+\.\d+)", block)
-            if ver_match:
-                version = ver_match.group(1)
-                if not version.startswith("v"):
-                    version = "v" + version
-                releases.append({
-                    "version": version,
-                    "content": block.strip(),
-                })
-        return releases
-
-    for i, header in enumerate(version_headers):
-        ver_match = re.search(r"(v?\d+\.\d+\.\d+)", header.get_text())
-        if not ver_match:
-            continue
-
-        version = ver_match.group(1)
-        if not version.startswith("v"):
-            version = "v" + version
-
-        # 날짜 추출 시도
-        date_match = re.search(
-            r"(\d{4}[-/]\d{2}[-/]\d{2}|[A-Z][a-z]+ \d{1,2},? \d{4})",
-            header.get_text(),
-        )
-        date_str = date_match.group(1) if date_match else ""
-
-        # 다음 헤더까지의 콘텐츠 수집
-        content_parts = []
-        sibling = header.find_next_sibling()
-        next_header = version_headers[i + 1] if i + 1 < len(version_headers) else None
-
-        while sibling and sibling != next_header:
-            content_parts.append(sibling.get_text(strip=True))
-            sibling = sibling.find_next_sibling()
-
+    # blocks[0]은 "# Changelog\n" 같은 헤더 부분 (버림)
+    # blocks[1] = "2.1.96", blocks[2] = 내용, blocks[3] = "2.1.94", blocks[4] = 내용 ...
+    for i in range(1, len(blocks) - 1, 2):
+        version = f"v{blocks[i]}"
+        content = blocks[i + 1].strip()
         releases.append({
             "version": version,
-            "date": date_str,
-            "content": "\n".join(content_parts),
+            "content": content,
         })
 
     return releases
@@ -194,14 +160,17 @@ def generate_update_with_openai(
 {current_html}
 ```"""
 
-    log.info("OpenAI Codex Mini API로 업데이트 생성 중...")
-    response = client.responses.create(
-        model="codex-mini-latest",
-        instructions="당신은 HTML 코드 생성 전문가입니다. 요청받은 HTML만 출력하세요.",
-        input=prompt,
+    log.info("OpenAI gpt-5.3-codex API로 업데이트 생성 중...")
+    response = client.chat.completions.create(
+        model="gpt-5.3-codex",
+        max_completion_tokens=16000,
+        messages=[
+            {"role": "developer", "content": "당신은 HTML 코드 생성 전문가입니다. 요청받은 HTML만 출력하세요."},
+            {"role": "user", "content": prompt},
+        ],
     )
 
-    response_text = response.output_text
+    response_text = response.choices[0].message.content
 
     # HTML만 추출
     html_match = re.search(r"(<!DOCTYPE html>.*</html>)", response_text, re.DOTALL)
@@ -294,17 +263,17 @@ def main():
     applied_version = get_applied_version()
     log.info(f"현재 적용 버전: {applied_version}")
 
-    # 2. 체인지로그 스크래핑
+    # 2. CHANGELOG.md 가져오기
     try:
-        changelog_html = fetch_changelog()
+        changelog_md = fetch_changelog()
     except requests.RequestException as e:
-        log.error(f"체인지로그 가져오기 실패: {e}")
+        log.error(f"CHANGELOG.md 가져오기 실패: {e}")
         sys.exit(1)
 
     # 3. 릴리스 파싱
-    releases = parse_changelog(changelog_html)
+    releases = parse_changelog(changelog_md)
     if not releases:
-        log.warning("체인지로그에서 릴리스 정보를 파싱할 수 없습니다")
+        log.warning("CHANGELOG.md에서 릴리스 정보를 파싱할 수 없습니다")
         sys.exit(1)
 
     log.info(f"파싱된 릴리스: {len(releases)}개")
