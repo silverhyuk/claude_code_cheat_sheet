@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.110 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.112 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -98,6 +98,7 @@ tailwind.config = {
       <div class="divide-y divide-gray-100">
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">\</kbd>+<kbd class="inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Enter</kbd></div><div class="text-gray-500">줄바꿈 (빠른 방법)</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+J</kbd></div><div class="text-gray-500">줄바꿈 (제어 시퀀스)</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><kbd class="k inline-block bg-gray-100 border border-gray-200 rounded px-1 font-mono text-2xs leading-relaxed whitespace-nowrap">Ctrl+Y</kbd></div><div class="text-gray-500">Ctrl+U로 지운 입력 버퍼 복원 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -436,6 +437,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_ENABLE_AWAY_SUMMARY</code></div><div class="text-gray-500">텔레메트리 꺼도 요약 기능 강제 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">FORCE_PROMPT_CACHING_5M</code></div><div class="text-gray-500">프롬프트 캐시 TTL 5분 강제 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">ENABLE_PROMPT_CACHING_1H</code></div><div class="text-gray-500">프롬프트 캐시 TTL 1시간 활성화 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">OTEL_LOG_RAW_API_BODIES</code></div><div class="text-gray-500">원시 API 요청·응답 본문 OTEL 로깅 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_USE_POWERSHELL_TOOL</code></div><div class="text-gray-500">PowerShell 도구 사용 여부 제어 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -472,6 +475,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/debug [설명]</code></div><div class="text-gray-500">디버그 로그로 문제 해결</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/loop [간격]</code></div><div class="text-gray-500">반복 예약 작업</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/claude-api</code></div><div class="text-gray-500">API + SDK 레퍼런스 로드</div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/ultrareview</code></div><div class="text-gray-500">클라우드 병렬 멀티에이전트 코드리뷰 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/less-permission-prompts</code></div><div class="text-gray-500">권한 프롬프트 감소 allowlist 제안 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -568,6 +573,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--mcp-config</code></div><div class="text-gray-500">MCP 설정 파일 경로</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--remote-control-session-name-prefix</code></div><div class="text-gray-500">원격 제어 세션명 접두사 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--exclude-dynamic-system-prompt-sections</code></div><div class="text-gray-500">print 모드 동적 프롬프트 구간 제외 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--effort xhigh</code></div><div class="text-gray-500">CLI에서 xhigh 노력 수준 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
