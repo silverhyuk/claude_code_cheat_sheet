@@ -5,8 +5,8 @@
 
 ## Current Version
 
-- **applied_version**: v2.1.123
-- **last_updated**: 2026-04-30
+- **applied_version**: v2.1.126
+- **last_updated**: 2026-05-02
 
 ## Applied Versions History
 
