@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.132 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.133 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -393,6 +393,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">Google Vertex AI 설정 마법사</code></div><div class="text-gray-500">로그인 화면서 GCP 연동 안내 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">EnterWorktree path 파라미터</code></div><div class="text-gray-500">기존 워크트리로 바로 전환 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">TRACESTATE</code></div><div class="text-gray-500">분산 추적 상태 전달값 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">worktree.baseRef</code></div><div class="text-gray-500">워크트리 기준 브랜치 선택 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">localSettings</code></div><div class="text-gray-500">Bash 항상 허용 시 로컬 설정 지속 저장 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
@@ -420,6 +421,9 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">blockedMarketplaces.hostPattern</code></div><div class="text-gray-500">차단 마켓 호스트 패턴 규칙 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">prUrlTemplate</code></div><div class="text-gray-500">PR 배지 링크 URL 템플릿 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">channelsEnabled</code></div><div class="text-gray-500">관리형 콘솔 조직 채널 기능 활성화 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">parentSettingsBehavior</code></div><div class="text-gray-500">관리 설정 병합 동작 선택 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">sandbox.socatPath</code></div><div class="text-gray-500">socat 바이너리 경로 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">sandbox.bwrapPath</code></div><div class="text-gray-500">bubblewrap 바이너리 경로 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -486,6 +490,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">hookSpecificOutput.updatedToolOutput</code></div><div class="text-gray-500">PostToolUse에서 도구 출력 교체 지원 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">invocation_trigger</code></div><div class="text-gray-500">스킬 호출 트리거 유형 속성 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude_code.skill_activated</code></div><div class="text-gray-500">슬래시 호출도 스킬 이벤트 기록 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">effort.level</code></div><div class="text-gray-500">Hooks JSON에 노력 수준 전달 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
