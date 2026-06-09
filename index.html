@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.168 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.169 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -458,6 +458,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">requiredMaximumVersion</code></div><div class="text-gray-500">허용 최대 버전 강제 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">requiredMinimumVersion</code></div><div class="text-gray-500">허용 최소 버전 강제 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">fallbackModel</code></div><div class="text-gray-500">기본 모델 장애 시 최대 3개 순차 대체 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">disableBundledSkills</code></div><div class="text-gray-500">내장 스킬/명령 노출 숨김 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -515,6 +516,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">OTEL_LOG_TOOL_DETAILS=1</code></div><div class="text-gray-500">tool_parameters 텔레메트리 포함 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">OTEL_RESOURCE_ATTRIBUTES</code></div><div class="text-gray-500">메트릭 라벨로 포함돼 차원별 분석 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">MAX_THINKING_TOKENS=0</code></div><div class="text-gray-500">기본 사고 모델의 사고를 완전히 끔 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_DISABLE_BUNDLED_SKILLS</code></div><div class="text-gray-500">내장 스킬 노출 비활성 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_SAFE_MODE</code></div><div class="text-gray-500">세이프 모드 환경변수 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -566,6 +569,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/claude-api</code></div><div class="text-gray-500">API + SDK 레퍼런스 로드</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/ultrareview</code></div><div class="text-gray-500">클라우드 병렬 멀티에이전트 코드리뷰 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/less-permission-prompts</code></div><div class="text-gray-500">권한 프롬프트 감소 allowlist 제안 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">disableBundledSkills</code></div><div class="text-gray-500">내장 스킬·워크플로우 숨김 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -704,6 +708,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--bg --exec '<command>'</code></div><div class="text-gray-500">백그라운드 명령 실행 플래그 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude agents --agent <name></code></div><div class="text-gray-500">디스패치 세션 에이전트 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--tools=Grep,Glob</code></div><div class="text-gray-500">네이티브 검색 도구 명시 활성화 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--safe-mode</code></div><div class="text-gray-500">모든 커스텀 비활성 시작 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
