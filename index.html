@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.185 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.186 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -172,6 +172,9 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">alwaysLoad</code></div><div class="text-gray-500">서버 도구를 항상 로드하도록 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/mcp Reconnect</code></div><div class="text-gray-500">.mcp.json 수정 반영 재연결 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">플러그인 LSP 서버 표시</code></div><div class="text-gray-500">플러그인 상세에 LSP 제공 표시 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--no-browser</code></div><div class="text-gray-500">SSH 환경 stdin 인증 지원 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude mcp logout <name></code></div><div class="text-gray-500">CLI에서 MCP 서버 로그아웃 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude mcp login <name></code></div><div class="text-gray-500">CLI에서 MCP 서버 인증 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -247,6 +250,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--enabled</code></div><div class="text-gray-500">활성 플러그인만 필터 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/plugin list</code></div><div class="text-gray-500">설치 플러그인 목록 조회 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/plugin 검색바</code></div><div class="text-gray-500">플러그인 마켓 목록 검색 지원 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/workflows (f)</code></div><div class="text-gray-500">에이전트 상태 필터 단축키 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -471,6 +475,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">language</code></div><div class="text-gray-500">세션 제목 생성 언어 고정 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">sandbox.allowAppleEvents</code></div><div class="text-gray-500">샌드박스 명령의 Apple Events 허용 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">attribution.sessionUrl</code></div><div class="text-gray-500">커밋·PR 세션 링크 생략 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">respondToBashCommands</code></div><div class="text-gray-500">! 명령 출력 자동응답 제어 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">teammateMode: "iterm2"</code></div><div class="text-gray-500">iTerm2 팀메이트 모드 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -531,6 +537,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_DISABLE_BUNDLED_SKILLS</code></div><div class="text-gray-500">내장 스킬 노출 비활성 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_SAFE_MODE</code></div><div class="text-gray-500">세이프 모드 환경변수 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CLIENT_PRESENCE_FILE</code></div><div class="text-gray-500">자리중 표시로 모바일 푸시 억제 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_RETRY_WATCHDOG</code></div><div class="text-gray-500">무인 세션 재시도 감시용 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_MAX_RETRIES</code></div><div class="text-gray-500">최대 재시도 15회로 제한 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
