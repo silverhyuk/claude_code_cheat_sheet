@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.186 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.187 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -477,6 +477,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">attribution.sessionUrl</code></div><div class="text-gray-500">커밋·PR 세션 링크 생략 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">respondToBashCommands</code></div><div class="text-gray-500">! 명령 출력 자동응답 제어 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">teammateMode: "iterm2"</code></div><div class="text-gray-500">iTerm2 팀메이트 모드 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">sandbox.credentials</code></div><div class="text-gray-500">샌드박스의 자격증명 접근 차단 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -539,6 +540,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CLIENT_PRESENCE_FILE</code></div><div class="text-gray-500">자리중 표시로 모바일 푸시 억제 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_RETRY_WATCHDOG</code></div><div class="text-gray-500">무인 세션 재시도 감시용 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_MAX_RETRIES</code></div><div class="text-gray-500">최대 재시도 15회로 제한 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT</code></div><div class="text-gray-500">MCP 도구 유휴 타임아웃 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -733,6 +735,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">claude agents --agent <name></code></div><div class="text-gray-500">디스패치 세션 에이전트 지정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--tools=Grep,Glob</code></div><div class="text-gray-500">네이티브 검색 도구 명시 활성화 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--safe-mode</code></div><div class="text-gray-500">모든 커스텀 비활성 시작 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">--background</code></div><div class="text-gray-500">백그라운드 실행 플래그 별칭 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
