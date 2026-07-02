@@ -43,7 +43,7 @@ tailwind.config = {
 <header class="bg-gradient-to-br from-indigo-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3 sticky top-0 z-50 shadow-lg">
   <h1 class="text-xl font-bold tracking-tight">
     Claude Code 치트시트
-    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.197 &middot; 한국어</span>
+    <span class="text-sm font-normal text-indigo-300 ml-2">v2.1.198 &middot; 한국어</span>
   </h1>
   <div class="flex items-center gap-3">
     <div class="flex bg-white/15 rounded-lg overflow-hidden">
@@ -235,7 +235,6 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/mcp</code></div><div class="text-gray-500">MCP 서버 관리</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/hooks</code></div><div class="text-gray-500">훅 관리</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/skills</code></div><div class="text-gray-500">사용 가능한 스킬 목록</div></div>
-        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/agents</code></div><div class="text-gray-500">에이전트 관리</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/chrome</code></div><div class="text-gray-500">Chrome 연동</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/reload-plugins</code></div><div class="text-gray-500">플러그인 핫 리로드</div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/add-dir &lt;경로&gt;</code></div><div class="text-gray-500">작업 디렉터리 추가</div></div>
@@ -578,6 +577,8 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">SessionStart.hookSpecificOutput.sessionTitle</code></div><div class="text-gray-500">시작·재개 시 세션 제목 설정 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">SessionStart.reloadSkills</code></div><div class="text-gray-500">시작 훅에서 스킬 재로드 지시 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">hookSpecificOutput.additionalContext</code></div><div class="text-gray-500">훅 피드백 추가 컨텍스트 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">agent_completed</code></div><div class="text-gray-500">에이전트 완료 시 알림 훅 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">agent_needs_input</code></div><div class="text-gray-500">에이전트 입력 필요 시 알림 훅 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
@@ -599,6 +600,7 @@ tailwind.config = {
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/ultrareview</code></div><div class="text-gray-500">클라우드 병렬 멀티에이전트 코드리뷰 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/less-permission-prompts</code></div><div class="text-gray-500">권한 프롬프트 감소 allowlist 제안 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
         <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">disableBundledSkills</code></div><div class="text-gray-500">내장 스킬·워크플로우 숨김 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
+        <div class="flex gap-1.5 py-0.5 items-baseline"><div class="shrink-0 min-w-28"><code class="bg-gray-100 rounded px-1 font-mono text-2xs">/dataviz</code></div><div class="text-gray-500">차트·대시보드 설계 가이드 스킬 <span class="inline-block bg-amber-400 text-amber-900 text-2xs font-bold px-1 rounded ml-1 align-middle">NEW</span></div></div>
       </div>
     </div>
 
